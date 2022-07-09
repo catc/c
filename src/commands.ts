@@ -2,13 +2,13 @@ import { readdirSync } from 'fs'
 import path from 'path'
 import { Command } from 'commander'
 import { TreeValue } from 'omelette'
+import { createNewCommand } from './hygen'
 
 const RESERVED_COMMANDS = new Set([
   'new',
   'link',
   'implode'
 ])
-
 
 const COMMANDS_DIR = '../commands'
 const DIR = path.resolve(__dirname, COMMANDS_DIR)
@@ -43,3 +43,18 @@ export function generateCommandTree(program: Command){
   return tree
 }
 
+export function addDefaultCommands(program: Command){
+  program
+    .command('new')
+    .description('Creates a new command')
+    .action(() => {
+      createNewCommand()
+    })
+
+  program
+    .command('implode')
+    .description('Unlinks and removes')
+    .action(() => {
+      console.log('TODO')
+    })
+}
