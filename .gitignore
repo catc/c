@@ -1,4 +1,4 @@
-cmds/*
+commands/*
 !.gitkeep
 
 node_modules/
