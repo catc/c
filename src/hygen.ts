@@ -7,7 +7,7 @@ import kebabcase from 'lodash/kebabcase'
 const templates = path.join(__dirname, 'templates')
 
 function runGenerator(args: string[]) {
-	runner(args, {
+	return runner(args, {
 		templates,
 		cwd: process.cwd(),
 		logger: new Logger(console.log.bind(console)),
@@ -16,7 +16,7 @@ function runGenerator(args: string[]) {
 			const opts = body && body.length > 0 ? { input: body } : {}
 			return require('execa').shell(action, opts)
 		},
-		debug: true,
+		// debug: true,
 	})
 }
 
@@ -38,7 +38,7 @@ export const createNewCommand = async () => {
 	}
 	const args = generateTemplateArgs('command new', resp as TemplateBody)
 
-	runGenerator(args)
+	await runGenerator(args)
 }
 
 export const initCLI = async () => {

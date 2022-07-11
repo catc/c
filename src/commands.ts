@@ -46,9 +46,12 @@ export function generateCommandTree(program: Command) {
 export function addBuiltInCommands(program: Command) {
 	program
 		.command('new')
-		.description('Creates a new command')
-		.action(() => {
-			createNewCommand()
+		.description('Creates a new command file')
+		.action(async () => {
+			await createNewCommand()
+			console.log(
+				`\nDo \`${program.name()} dev\` to open commands/ dir (if you have vscode).`,
+			)
 		})
 
 	program
@@ -83,6 +86,7 @@ export function addBuiltInCommands(program: Command) {
 			})) as { confirm2: boolean }
 			if (!confirm2) return
 
+			// TODO
 			console.log('WOULD DELETE')
 		})
 }
