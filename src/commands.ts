@@ -3,11 +3,9 @@ import path from 'path'
 import { Command } from 'commander'
 import { TreeValue } from 'omelette'
 import { createNewCommand } from './hygen'
-
-// TODO - add option to open editor?
-const RESERVED_COMMANDS_REGEXP = ['new', 'link', 'implode'].map(
-	c => new RegExp(`${c}.(j|t)s`),
-)
+import { prompt } from 'enquirer'
+import { commandSync } from 'execa'
+import { RESERVED_COMMANDS_REGEXP } from './constants'
 
 const COMMANDS_DIR = '../commands'
 const DIR = path.resolve(__dirname, COMMANDS_DIR)
@@ -54,9 +52,37 @@ export function addBuiltInCommands(program: Command) {
 		})
 
 	program
-		.command('implode')
-		.description('Unlinks and removes')
+		.command('dev')
+		.description('Opens commands/ folder in vscode')
 		.action(() => {
-			console.log('TODO')
+			const commandsDir = path.resolve(process.cwd(), './commands')
+			try {
+				commandSync(`code ${commandsDir}`, { shell: true })
+			} catch (err: unknown) {
+				console.error((err as Error).message)
+			}
+		})
+
+	program
+		.command('implode')
+		.description('Removes from path and deletes repo')
+		.action(async () => {
+			const { confirm1 } = (await prompt({
+				type: 'confirm',
+				name: 'confirm1',
+				required: true,
+				message: `Are you sure you want to delete this repo? There's no going back.`,
+			})) as { confirm1: boolean }
+
+			if (!confirm1) return
+			const { confirm2 } = (await prompt({
+				type: 'confirm',
+				name: 'confirm2',
+				required: true,
+				message: 'Are you completely sure?',
+			})) as { confirm2: boolean }
+			if (!confirm2) return
+
+			console.log('WOULD DELETE')
 		})
 }

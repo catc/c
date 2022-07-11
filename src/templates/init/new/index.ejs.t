@@ -1,6 +1,5 @@
 ---
-# to: src/index.ts
-to: _templates/_temp/index.ts
+to: src/index.ts
 ---
 import setup from './setup'
 

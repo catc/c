@@ -1,6 +1,10 @@
 import { prompt } from 'enquirer'
 
-export default async function p() {
+interface Response {
+	name: string
+}
+
+export default async function p(): Promise<Response> {
 	const resp = await prompt([
 		{
 			type: 'input',
@@ -10,5 +14,5 @@ export default async function p() {
 		},
 	])
 
-	return resp
+	return resp as Response
 }
