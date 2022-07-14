@@ -86,7 +86,9 @@ export function addBuiltInCommands(program: Command) {
 			})) as { confirm2: boolean }
 			if (!confirm2) return
 
-			// TODO
-			console.log('WOULD DELETE')
+			commandSync(`./scripts/init.sh implode ${program.name()}`, {
+				shell: true,
+				stdout: process.stdout,
+			})
 		})
 }

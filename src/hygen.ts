@@ -40,12 +40,3 @@ export const createNewCommand = async () => {
 
 	await runGenerator(args)
 }
-
-export const initCLI = async () => {
-	// TODO - get app name
-	// TODO - ask if should autocomplete
-	// TODO - update zshrc
-	// TODO - generate src/index.ts
-	// TODO - display message on how to get strted
-	// run('init new --name foooo')
-}
