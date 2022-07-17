@@ -5,10 +5,11 @@ import { TreeValue } from 'omelette'
 import { createNewCommand } from './hygen'
 import { prompt } from 'enquirer'
 import { commandSync } from 'execa'
-import { RESERVED_COMMANDS_REGEXP } from './constants'
-
-const RELATIVE_COMMANDS_DIR = '../commands'
-const COMMANDS_DIR = path.resolve(__dirname, RELATIVE_COMMANDS_DIR)
+import {
+	COMMANDS_DIR,
+	RELATIVE_COMMANDS_DIR,
+	RESERVED_COMMANDS_REGEXP,
+} from './constants'
 
 // loads user commands
 export function loadCommands(program: Command) {
@@ -50,7 +51,7 @@ export function addBuiltInCommands(program: Command) {
 		.action(async () => {
 			await createNewCommand()
 			console.log(
-				`\nDo \`${program.name()} dev\` to open commands/ dir (if you have vscode).`,
+				`\nDo \`${program.name()} dev\` to open \`commands/\` dir (if you have vscode).`,
 			)
 		})
 

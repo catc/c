@@ -34,8 +34,6 @@ detect_profile () {
     exit 1
   fi
 
-  # echo "footest"
-  # return # FOR TESTING
   echo "$DETECTED_PROFILE"
 }
 
@@ -128,13 +126,6 @@ check_if_bin_exists () {
 }
 
 install () {
-  # setup_src_index "fofo"
-  # return 
-  #   add_to_profile $NAME ## FOR TESTING
-  # echo $(get_root_dir)
-  # return # FOR TESTING
-
-
   # check for supported shell
   if [[ $SHELL != *"zsh"* ]]; then
     echo "shell not supported, currently only supports 'zsh'"
@@ -161,11 +152,6 @@ install () {
 
     break
   done
-
-  # echo "GOING WITH $NAME" ## FOR TESTING
-  # add_symlink $NAME
-  # add_to_profile $NAME
-  # return # FOR TESTING
 
   # create dir, clone
   command mkdir $NAME || {

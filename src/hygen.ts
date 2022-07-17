@@ -1,14 +1,10 @@
 import { runner, Logger } from 'hygen'
 import { join, resolve } from 'path'
-import { RESERVED_COMMANDS } from './constants'
+import { COMMANDS_DIR, RESERVED_COMMANDS } from './constants'
 import newCommandPrompt from './templates/command/new/p'
 import kebabcase from 'lodash/kebabcase'
 
 const templates = join(__dirname, 'templates')
-
-// TODO - combine and import here and in commands.ts
-const RELATIVE_COMMANDS_DIR = '../commands'
-const COMMANDS_DIR = resolve(__dirname, RELATIVE_COMMANDS_DIR)
 
 function runGenerator(args: string[]) {
 	return runner(args, {
@@ -33,6 +29,7 @@ export function generateTemplateArgs(template: string, body: TemplateBody) {
 	return args
 }
 
+// TODO - add test
 export const createNewCommand = async () => {
 	const resp = await newCommandPrompt().catch(() => process.exit(0))
 
