@@ -34,16 +34,22 @@ detect_profile () {
     exit 1
   fi
 
+  # echo "footest"
+  # return # FOR TESTING
   echo "$DETECTED_PROFILE"
 }
 
 get_root_dir () {
   DIR="$(dirname "$(readlink -f "$0")")"
   DIR=${DIR%/*}
+  # if curling, script path will be in /dev/, just use pwd
+  if [[ "$DIR" =~ ^\/dev* ]]; then
+    DIR="$PWD"
+  fi
   echo "$DIR"
 }
 
-export_dir_path_var () {
+add_to_profile () {
   NAME=$1
   DIR=$(get_root_dir)
   PROFILE=$(detect_profile)
@@ -57,7 +63,7 @@ export_dir_path_var () {
   command printf "${SOURCE_STR}" >> "$PROFILE"
 }
 
-unset_dir_path_var () {
+remove_from_profile () {
   PROFILE=$(detect_profile)
   echo "Remove references in $PROFILE"
   command sed -ie "/${CLI_VAR_START}/,+3d" $PROFILE
@@ -104,7 +110,7 @@ yarn_install () {
 setup_src_index () {
   NAME=$1
   echo "Generating src/index.ts with name '$NAME'"
-  HYGEN_TMPLS=$TEMPLATES_DIR ./node_modules/.bin/hygen init new --name $NAME
+  HYGEN_OVERWRITE=1 HYGEN_TMPLS=$TEMPLATES_DIR ./node_modules/.bin/hygen init new --name $NAME
 }
 
 clear_repo () {
@@ -112,7 +118,23 @@ clear_repo () {
   printf "\n\nCleaned up everything, run \`rm -rf $DIR\` to remove repo\n"
 }
 
+check_if_bin_exists () {
+  NAME=$1
+  if (command -v "$NAME"); then
+    echo "bin with name '$NAME' already exists"
+    return 0
+  fi
+  return 1
+}
+
 install () {
+  # setup_src_index "fofo"
+  # return 
+  #   add_to_profile $NAME ## FOR TESTING
+  # echo $(get_root_dir)
+  # return # FOR TESTING
+
+
   # check for supported shell
   if [[ $SHELL != *"zsh"* ]]; then
     echo "shell not supported, currently only supports 'zsh'"
@@ -126,7 +148,6 @@ install () {
     if [[ -z "$NAME" ]]; then
       echo "Defaulting to 'c'"
       NAME=$DEFAULT_BIN_NAME
-      break
     fi
 
     if (( $(wc -w <<< "$NAME") > 1 )); then
@@ -134,16 +155,22 @@ install () {
       continue
     fi
 
-    if (command -v "$NAME"); then 
-      echo "bin with name '$NAME' already exists"
+    if check_if_bin_exists "$NAME"; then
       continue
     fi
 
     break
   done
 
+  # echo "GOING WITH $NAME" ## FOR TESTING
+  # add_symlink $NAME
+  # add_to_profile $NAME
+  # return # FOR TESTING
+
   # create dir, clone
-  mkdir $NAME
+  command mkdir $NAME || {
+    exit 1
+  }
   cd $NAME
   command git clone "$GITHUB_SOURCE_URL" --depth=1 . || {
     echo "failed to clone repo"
@@ -157,7 +184,7 @@ install () {
   setup_src_index $NAME
 
   # export variables to profile
-  export_dir_path_var $NAME
+  add_to_profile $NAME
 
   # symlink
   add_symlink $NAME
@@ -176,7 +203,7 @@ implode () {
   remove_symlink $NAME
 
   # remove entry from profile
-  unset_dir_path_var
+  remove_from_profile
 
   # clear repo message
   clear_repo

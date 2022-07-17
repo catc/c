@@ -1,10 +1,14 @@
 import { runner, Logger } from 'hygen'
-import path from 'path'
+import { join, resolve } from 'path'
 import { RESERVED_COMMANDS } from './constants'
 import newCommandPrompt from './templates/command/new/p'
 import kebabcase from 'lodash/kebabcase'
 
-const templates = path.join(__dirname, 'templates')
+const templates = join(__dirname, 'templates')
+
+// TODO - combine and import here and in commands.ts
+const RELATIVE_COMMANDS_DIR = '../commands'
+const COMMANDS_DIR = resolve(__dirname, RELATIVE_COMMANDS_DIR)
 
 function runGenerator(args: string[]) {
 	return runner(args, {
@@ -32,11 +36,15 @@ export function generateTemplateArgs(template: string, body: TemplateBody) {
 export const createNewCommand = async () => {
 	const resp = await newCommandPrompt().catch(() => process.exit(0))
 
-	resp.name = kebabcase(resp.name)
-	if (RESERVED_COMMANDS.includes(resp.name)) {
-		return console.error(`Command name "${resp.name}" is reserved.`)
+	const name = kebabcase(resp.name)
+	if (RESERVED_COMMANDS.includes(name)) {
+		return console.error(`Command name "${name}" is reserved.`)
 	}
-	const args = generateTemplateArgs('command new', resp as TemplateBody)
+	const path = join(COMMANDS_DIR, `${name}.ts`)
+	const args = generateTemplateArgs('command new', {
+		name,
+		path,
+	} as TemplateBody)
 
 	await runGenerator(args)
 }

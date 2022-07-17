@@ -1,5 +1,5 @@
 ---
-to: commands/<%= name %>.ts
+to: <%= path %>
 ---
 import { program } from 'commander'
 

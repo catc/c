@@ -7,18 +7,18 @@ import { prompt } from 'enquirer'
 import { commandSync } from 'execa'
 import { RESERVED_COMMANDS_REGEXP } from './constants'
 
-const COMMANDS_DIR = '../commands'
-const DIR = path.resolve(__dirname, COMMANDS_DIR)
+const RELATIVE_COMMANDS_DIR = '../commands'
+const COMMANDS_DIR = path.resolve(__dirname, RELATIVE_COMMANDS_DIR)
 
 // loads user commands
 export function loadCommands(program: Command) {
-	const cmds = readdirSync(DIR).filter(f => f.match(/\.(t|j)s$/))
+	const cmds = readdirSync(COMMANDS_DIR).filter(f => f.match(/\.(t|j)s$/))
 
 	cmds.forEach(file => {
 		if (RESERVED_COMMANDS_REGEXP.find(reg => reg.test(file))) {
 			return console.warn(`"${file}" command matches built in, skipping`)
 		}
-		require(`./${COMMANDS_DIR}/${file}`)
+		require(`./${RELATIVE_COMMANDS_DIR}/${file}`)
 	})
 }
 
@@ -86,7 +86,8 @@ export function addBuiltInCommands(program: Command) {
 			})) as { confirm2: boolean }
 			if (!confirm2) return
 
-			commandSync(`./scripts/init.sh implode ${program.name()}`, {
+			const initScript = path.resolve(__dirname, '../scripts/init.sh')
+			commandSync(`${initScript} implode ${program.name()}`, {
 				shell: true,
 				stdout: process.stdout,
 			})
