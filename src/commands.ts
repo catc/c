@@ -5,20 +5,15 @@ import { TreeValue } from 'omelette'
 import { createNewCommand } from './hygen'
 import { prompt } from 'enquirer'
 import { commandSync } from 'execa'
-import {
-	COMMANDS_DIR,
-	RELATIVE_COMMANDS_DIR,
-	RESERVED_COMMANDS_REGEXP,
-} from './constants'
+import { COMMANDS_DIR, COMMAND_SUFFIX, RELATIVE_COMMANDS_DIR } from './constants'
+
+const COMMAND_FILE_REGEXP = new RegExp(`${COMMAND_SUFFIX}.(t|j)s$`)
 
 // loads user commands
 export function loadCommands(program: Command) {
-	const cmds = readdirSync(COMMANDS_DIR).filter(f => f.match(/\.(t|j)s$/))
+	const cmds = readdirSync(COMMANDS_DIR).filter(f => COMMAND_FILE_REGEXP.test(f))
 
 	cmds.forEach(file => {
-		if (RESERVED_COMMANDS_REGEXP.find(reg => reg.test(file))) {
-			return console.warn(`"${file}" command matches built in, skipping`)
-		}
 		require(`./${RELATIVE_COMMANDS_DIR}/${file}`)
 	})
 }

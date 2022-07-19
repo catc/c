@@ -54,24 +54,27 @@ describe('loadCommands', () => {
 	})
 
 	it('loads commands', () => {
-		;(readdirSync as jest.Mock).mockReturnValue(['foo.js', 'bar.ts', 'new.ts'])
+		;(readdirSync as jest.Mock).mockReturnValue([
+			'foo.command.js',
+			'bar.command.ts',
+			'bloo',
+		])
 
 		const program = new Command()
 
-		jest.mock('../../commands/foo.js', () => program.command('foo'), {
+		jest.mock('../../commands/foo.command.js', () => program.command('foo'), {
 			virtual: true,
 		})
-		jest.mock('../../commands/bar.ts', () => program.command('bar'), {
+		jest.mock('../../commands/bar.command.ts', () => program.command('bar'), {
 			virtual: true,
 		})
-		// won't be loaded because `new` matched reserved, built in command
-		jest.mock('../../commands/new.ts', () => program.command('new'), {
+		// wont be loaded because doesn't match the .command.ts pattern
+		jest.mock('../../commands/bloo.ts', () => program.command('boo'), {
 			virtual: true,
 		})
 
 		loadCommands(program)
 		const addedCommands = program.commands.map(c => c.name())
 		expect(addedCommands).toEqual(['foo', 'bar'])
-		expect(warn).toHaveBeenCalledWith(expect.stringContaining('new.ts'))
 	})
 })

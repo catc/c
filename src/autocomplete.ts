@@ -24,6 +24,7 @@ export function handleAutocomplete(program: Command) {
 	const opts = program.opts()
 	if (hasCompletionOption(opts)) {
 		generateAutocomplete(program)
+		return true
 	}
 }
 

@@ -1,6 +1,6 @@
 import { runner, Logger } from 'hygen'
 import { join, resolve } from 'path'
-import { COMMANDS_DIR, RESERVED_COMMANDS } from './constants'
+import { COMMANDS_DIR, generateCommandFilename, RESERVED_COMMANDS } from './constants'
 import newCommandPrompt from './templates/command/new/p'
 import kebabcase from 'lodash/kebabcase'
 
@@ -29,7 +29,6 @@ export function generateTemplateArgs(template: string, body: TemplateBody) {
 	return args
 }
 
-// TODO - add test
 export const createNewCommand = async () => {
 	const resp = await newCommandPrompt().catch(() => process.exit(0))
 
@@ -37,7 +36,7 @@ export const createNewCommand = async () => {
 	if (RESERVED_COMMANDS.includes(name)) {
 		return console.error(`Command name "${name}" is reserved.`)
 	}
-	const path = join(COMMANDS_DIR, `${name}.ts`)
+	const path = join(COMMANDS_DIR, generateCommandFilename(name))
 	const args = generateTemplateArgs('command new', {
 		name,
 		path,
