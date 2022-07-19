@@ -1,8 +1,9 @@
 
 <h1 align="center">
-	<img src="./src/misc/ss.gif" />
-	<br/>
 	c
+	<br/>
+	<br/>
+	<img src="./src/misc/ss.gif" />
 </h1>
 
 A somewhat more sane method of writing CLI scripts in typescript.
