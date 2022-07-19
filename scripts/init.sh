@@ -23,7 +23,7 @@ detect_profile () {
   DETECTED_PROFILE=''
 
   # TODO - eventually support ".bashrc", ".bash_profile"
-  for EACH_PROFILE in ".profile" ".zshrc"; do
+  for EACH_PROFILE in ".zshrc" ".profile"; do
     if DETECTED_PROFILE="$(try_profile "${HOME}/${EACH_PROFILE}")"; then
       break
     fi
