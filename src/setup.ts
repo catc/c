@@ -1,4 +1,5 @@
 import { program } from 'commander'
+import chalk from 'chalk'
 
 import { handleAutocomplete, setupAutoCompleteOptions } from './autocomplete'
 import { addBuiltInCommands, loadCommands } from './commands'
@@ -9,7 +10,7 @@ export default function setup(programName: string) {
 		.action(() => {
 			if (handleAutocomplete(program)) return
 
-			// console.error('Unsupported command')
+			console.error(chalk.red('Command not found'))
 		})
 		.showHelpAfterError()
 

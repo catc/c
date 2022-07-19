@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "chalk": "4.1.2",
     "commander": "^9.3.0",
     "execa": "5.1.1",
     "hygen": "^6.2.7",
